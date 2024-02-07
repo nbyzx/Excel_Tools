@@ -1,28 +1,28 @@
-# mywindow.py
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtGui import QGuiApplication
 
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("窗口类示例")
+        self.setWindowTitle("Excel工具")
 
-        self.label = QLabel(self)
-        self.label.setText("点击按钮以显示消息")
-        self.label.move(50, 50)
+        screen = QGuiApplication.primaryScreen()
+        screen_rect = screen.availableGeometry()
 
-        self.button = QPushButton(self)
-        self.button.setText("点击我")
-        self.button.move(50, 100)
-        self.button.clicked.connect(self.button_click)
+        window_width = screen_rect.width() // 2
+        window_height = screen_rect.height() // 2
 
-    def button_click(self):
-        self.label.setText("Hello, World!")
+        window_x = (screen_rect.width() - window_width) // 2
+        window_y = (screen_rect.height() - window_height) // 2
+
+        self.setGeometry(window_x, window_y, window_width, window_height)
 
 
 if __name__ == '__main__':
-    app = QApplication([])
+    app = QApplication(sys.argv)
     window = MyWindow()
     window.show()
-    app.exec()
+    sys.exit(app.exec())
