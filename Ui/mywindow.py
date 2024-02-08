@@ -23,6 +23,7 @@ class MyWindow(QMainWindow):
         self.setGeometry(window_x, window_y, window_width, window_height)
 
         self.table = Table(self)
+        self.titles = []
         self.progress = ProgressBar(self)
 
         layout = QVBoxLayout()
@@ -38,17 +39,21 @@ class MyWindow(QMainWindow):
 
         menu_bar.data_count.connect(self.set_rc)
         menu_bar.table_value.connect(self.set_data)
+        menu_bar.table_title.connect(self.set_table_title)
 
     @pyqtSlot(int, int)
     def set_rc(self, row, column):
-        print(row,column)
         self.table.setRowCount(row)
         self.table.setColumnCount(column)
-        self.progress.setMaximum(row)
+        self.progress.setMaximum(row-1)     # 设置进度条最大值，因索引从0开始故-1
 
     @pyqtSlot(int, int, str)
     def set_data(self, row, column, value):
         item = QTableWidgetItem()
         item.setText(value)
         self.table.setItem(row, column, item)
-        self.progress.setValue(row+1)
+        self.progress.setValue(row)
+
+    @pyqtSlot(list)
+    def set_table_title(self, title_list):
+        self.table.setHorizontalHeaderLabels(title_list)

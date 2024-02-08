@@ -7,6 +7,7 @@ from Utils.openfile import OpenFile
 
 class MenuBar(QMenuBar):
     data_count = pyqtSignal(int, int)
+    table_title = pyqtSignal(list)
     table_value = pyqtSignal(int, int, str)
 
     def __init__(self, parent=None):
@@ -30,6 +31,7 @@ class MenuBar(QMenuBar):
                 open_file_action = OpenFile(self, file_path)  # 创建线程对象
                 open_file_action.data_count.connect(self.set_rc)
                 open_file_action.table_value.connect(self.set_data)
+                open_file_action.table_title.connect(self.set_table_title)
                 open_file_action.start()
 
     @pyqtSlot(int, int)
@@ -39,3 +41,7 @@ class MenuBar(QMenuBar):
     @pyqtSlot(int, int, str)
     def set_data(self, row: int, col: int, value: str):
         self.table_value.emit(row, col, value)
+
+    @pyqtSlot(list)
+    def set_table_title(self, title_list):
+        self.table_title.emit(title_list)
