@@ -1,6 +1,7 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtGui import QGuiApplication
+
+from Ui.menu import MenuBar
 
 
 class MyWindow(QMainWindow):
@@ -20,9 +21,5 @@ class MyWindow(QMainWindow):
 
         self.setGeometry(window_x, window_y, window_width, window_height)
 
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MyWindow()
-    window.show()
-    sys.exit(app.exec())
+        menu_bar = MenuBar(self)
+        self.setMenuBar(menu_bar)
