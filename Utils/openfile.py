@@ -25,7 +25,7 @@ class OpenFile(QThread):
         self.table_title.emit(titles)
         for i in range(dataframe.shape[0]-1):       # 遍历表格行（dataframe.shape[0]-1表示减去标题行）
             for j in range(dataframe.shape[1]):
-                value = str(dataframe.iloc[i+1, j])
+                value = str(dataframe.iloc[i+1, j])     # str(dataframe.iloc[i+1, j])读取单元格数据并转str类型
                 if value == 'nan':
                     value = ''
-                self.table_value.emit(i, j, value)    # str(dataframe.iloc[i+1, j])读取单元格数据并转str类型
+                self.table_value.emit(i, j, value)
