@@ -13,10 +13,11 @@ class MenuBar(QMenuBar):
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
 
-        edit_menu = QMenu("编辑", self)
-        self.addMenu(edit_menu)
-
     def open_file(self):
         file_dialog = QFileDialog()
-        file_path = file_dialog.getOpenFileName(self, "打开文件")[0]
-        print("打开文件:", file_path)
+        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)  # 设置文件对话框为打开文件模式
+        file_dialog.setNameFilter("Excel文件 (*.xlsx *.xls)")  # 设置过滤器
+        if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
+            file_path = file_dialog.selectedFiles()[0]
+            if file_path:
+                print("打开文件:", file_path)
