@@ -1,4 +1,5 @@
 from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QTableWidgetItem, QHBoxLayout, QTableWidget
 from Ui.menu import MenuBar
 from Ui.progress import ProgressBar
@@ -40,7 +41,12 @@ class MyWindow(QMainWindow):
 
         self.menu_bar = MenuBar(self)
         self.setMenuBar(self.menu_bar)
-
+        self.table.data_count.connect(self.set_rc)
+        self.table.table_value.connect(self.set_data)
+        self.table.table_title.connect(self.set_table_title)
+        self.table_compare.data_count.connect(self.set_rc)
+        self.table_compare.table_value.connect(self.set_data)
+        self.table_compare.table_title.connect(self.set_table_title)
         self.menu_bar.data_count.connect(self.set_rc)
         self.menu_bar.table_value.connect(self.set_data)
         self.menu_bar.table_title.connect(self.set_table_title)
@@ -52,6 +58,9 @@ class MyWindow(QMainWindow):
             self.table_compare.hide()
         else:
             self.table_compare.show()
+        self.table_compare.clear()
+        self.table_compare.setRowCount(1)
+        self.table_compare.setColumnCount(1)
 
     @pyqtSlot(int, int)
     def set_rc(self, row, column):
@@ -61,15 +70,27 @@ class MyWindow(QMainWindow):
             table.setRowCount(row)
             table.setColumnCount(column)
             # 设置进度条最大值，因索引从0开始故-1
-            self.progress.setMaximum(row-1)
+            self.progress.setMaximum(row - 1)
 
     @pyqtSlot(int, int, str)
     def set_data(self, row, column, value):
         selected_table = self.centralWidget().focusWidget()
+        red_color = QColor(255, 255, 255)
         if selected_table and isinstance(selected_table, QTableWidget):
             table = selected_table
             item = QTableWidgetItem()
             item.setText(value)
+            if self.menu_bar.data_compare_action.isChecked():
+                table_to_check = self.table_compare if selected_table == self.table else self.table
+                if table_to_check.rowCount() > row and table_to_check.columnCount() > column:
+                    item_compare = table_to_check.item(row, column)
+                    if item_compare:
+                        if item_compare.text() != value:
+                            red_color = QColor(255, 0, 0)
+                        item_compare.setBackground(red_color)
+                else:
+                    red_color = QColor(255, 0, 0)
+            item.setBackground(red_color)
             table.setItem(row, column, item)
             self.progress.setValue(row)
 

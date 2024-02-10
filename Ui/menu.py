@@ -22,10 +22,10 @@ class MenuBar(QMenuBar):
         open_file_action = QAction("打开", self)
         open_file_action.triggered.connect(self.open_file)
         file_menu.addAction(open_file_action)
-        data_compare_action = QAction("比较", self)
-        data_compare_action.setCheckable(True)
-        data_compare_action.triggered.connect(self.data_compare)
-        data_menu.addAction(data_compare_action)
+        self.data_compare_action = QAction("数据比对", self)
+        self.data_compare_action.setCheckable(True)
+        self.data_compare_action.triggered.connect(self.data_compare)
+        data_menu.addAction(self.data_compare_action)
 
         # 创建打开线程对象
         self.open_file_action = OpenFile(self)
