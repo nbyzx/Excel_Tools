@@ -1,23 +1,30 @@
-from PyQt6.QtCore import Qt, pyqtSlot, pyqtSignal
-from PyQt6.QtGui import QAction, QDragEnterEvent
-from PyQt6.QtWidgets import QTableWidget, QMenu
+import threading
+
+from PyQt6.QtCore import Qt, pyqtSlot
+from PyQt6.QtGui import QAction, QDragEnterEvent, QColor
+from PyQt6.QtWidgets import QTableWidget, QMenu, QApplication, QTableWidgetItem
 
 from Utils.openfile import OpenFile
 
 
 class Table(QTableWidget):
-    data_count = pyqtSignal(int, int)
-    table_title = pyqtSignal(list)
-    table_value = pyqtSignal(int, int, str)
+    thread_lock = True
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.parent = parent
         self.setAcceptDrops(True)
         self.setDragEnabled(True)  # 允许拖动
         self.setColumnCount(1)
         self.setRowCount(1)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.showContextMenu)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton and self.thread_lock:
+            self.parent.select_table = QApplication.focusWidget()
+            self.parent.interface.set_table_color()
+        super().mousePressEvent(event)
 
     def dragEnterEvent(self, event: QDragEnterEvent):
         if event.mimeData().hasUrls():  # 判断是否包含URL
@@ -34,14 +41,16 @@ class Table(QTableWidget):
             if file_path:
                 # 设置焦点到拖放的表格
                 self.setFocus()
+                self.parent.select_table = self.parent.centralWidget().focusWidget()
+                self.parent.interface.set_table_color()
                 # 创建线程对象
                 open_file_action = OpenFile(self, file_path)
                 # 绑定总行列信号槽
-                open_file_action.data_count.connect(self.set_rc)
+                open_file_action.data_count.connect(self.parent.interface.set_rc)
                 # 绑定数据信号槽
-                open_file_action.table_value.connect(self.set_data)
+                open_file_action.table_value.connect(self.parent.interface.set_data)
                 # 绑定表头标题信号槽
-                open_file_action.table_title.connect(self.set_table_title)
+                open_file_action.table_title.connect(self.parent.interface.set_table_title)
                 open_file_action.start()
 
     def showContextMenu(self, pos):
@@ -69,15 +78,3 @@ class Table(QTableWidget):
             print(f"选择的行：{row}，选择的列：{column}")
             print(f"选择的内容: {item.text()}")
             print(f"选择的菜单: {action}")
-
-    @pyqtSlot(int, int)
-    def set_rc(self, row, col):
-        self.data_count.emit(row, col)
-
-    @pyqtSlot(int, int, str)
-    def set_data(self, row: int, col: int, value: str):
-        self.table_value.emit(row, col, value)
-
-    @pyqtSlot(list)
-    def set_table_title(self, title_list):
-        self.table_title.emit(title_list)
