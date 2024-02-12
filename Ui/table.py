@@ -18,10 +18,10 @@ class Table(QTableWidget):
         self.setColumnCount(1)
         self.setRowCount(1)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.showContextMenu)
+        self.customContextMenuRequested.connect(self.show_context_menu)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton and self.thread_lock:
+        if self.thread_lock:
             self.parent.select_table = QApplication.focusWidget()
             self.parent.interface.set_table_color()
         super().mousePressEvent(event)
@@ -53,17 +53,24 @@ class Table(QTableWidget):
                 open_file_action.table_title.connect(self.parent.interface.set_table_title)
                 open_file_action.start()
 
-    def showContextMenu(self, pos):
+    def show_context_menu(self, pos):
         row = self.currentRow()
         column = self.currentColumn()
 
         # 创建右键菜单
         menu = QMenu(self)
 
+        # 添加数据提取菜单
+        data_extraction_menu = menu.addMenu("数据提取")
+
         # 添加动作
-        action1 = QAction("Action 1", self)
-        action1.triggered.connect(lambda: self.onContextMenuAction(row, column, "Action 1"))
-        menu.addAction(action1)
+        get_age = QAction("取选中列年龄", self)
+        get_age.triggered.connect(self.parent.interface.get_age)
+        data_extraction_menu.addAction(get_age)
+
+        get_gender = QAction("取选中列性别", self)
+        get_gender.triggered.connect(self.parent.interface.get_gender)
+        data_extraction_menu.addAction(get_gender)
 
         action2 = QAction("Action 2", self)
         action2.triggered.connect(lambda: self.onContextMenuAction(row, column, "Action 2"))

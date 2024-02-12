@@ -13,20 +13,12 @@ class OpenFile(QThread):
         self.file_path = file_path
 
     def run(self):
-        if self.parent is self.parent.parent.menu_bar:
-            self.parent.menu_bar.file_menu.setEnabled(False)
-            self.parent.menu_bar.data_menu.setEnabled(False)
-            self.parent.parent.table.setAcceptDrops(False)
-            self.parent.parent.table_compare.setAcceptDrops(False)
-            self.parent.parent.table.thread_lock = False
-            self.parent.parent.table_compare.thread_lock = False
-        elif self.parent in [self.parent.parent.table, self.parent.parent.table_compare]:
-            self.parent.parent.menu_bar.file_menu.setEnabled(False)
-            self.parent.parent.menu_bar.data_menu.setEnabled(False)
-            self.parent.parent.table.setAcceptDrops(False)
-            self.parent.parent.table_compare.setAcceptDrops(False)
-            self.parent.parent.table.thread_lock = False
-            self.parent.parent.table_compare.thread_lock = False
+        self.parent.parent.menu_bar.file_menu.setEnabled(False)
+        self.parent.parent.menu_bar.data_menu.setEnabled(False)
+        self.parent.parent.table.setAcceptDrops(False)
+        self.parent.parent.table_compare.setAcceptDrops(False)
+        self.parent.parent.table.thread_lock = False
+        self.parent.parent.table_compare.thread_lock = False
         extension = self.file_path.split('.')[-1]
         # 读取 Excel 文件
         if extension == 'xls':
@@ -51,17 +43,9 @@ class OpenFile(QThread):
                 if value == 'nan':
                     value = ''
                 self.table_value.emit(i, j, value)
-        if self.parent is self.parent.parent.menu_bar:
-            self.parent.menu_bar.file_menu.setEnabled(True)
-            self.parent.menu_bar.data_menu.setEnabled(True)
-            self.parent.parent.table.setAcceptDrops(True)
-            self.parent.parent.table_compare.setAcceptDrops(True)
-            self.parent.parent.table.thread_lock = True
-            self.parent.parent.table_compare.thread_lock = True
-        elif self.parent in [self.parent.parent.table, self.parent.parent.table_compare]:
-            self.parent.parent.menu_bar.file_menu.setEnabled(True)
-            self.parent.parent.menu_bar.data_menu.setEnabled(True)
-            self.parent.parent.table.setAcceptDrops(True)
-            self.parent.parent.table_compare.setAcceptDrops(True)
-            self.parent.parent.table.thread_lock = True
-            self.parent.parent.table_compare.thread_lock = True
+        self.parent.parent.menu_bar.file_menu.setEnabled(True)
+        self.parent.parent.menu_bar.data_menu.setEnabled(True)
+        self.parent.parent.table.setAcceptDrops(True)
+        self.parent.parent.table_compare.setAcceptDrops(True)
+        self.parent.parent.table.thread_lock = True
+        self.parent.parent.table_compare.thread_lock = True
