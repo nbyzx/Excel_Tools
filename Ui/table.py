@@ -1,8 +1,6 @@
-import threading
-
-from PyQt6.QtCore import Qt, pyqtSlot
-from PyQt6.QtGui import QAction, QDragEnterEvent, QColor
-from PyQt6.QtWidgets import QTableWidget, QMenu, QApplication, QTableWidgetItem
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QAction, QDragEnterEvent
+from PyQt6.QtWidgets import QTableWidget, QMenu, QApplication
 
 from Utils.openfile import OpenFile
 
@@ -14,7 +12,7 @@ class Table(QTableWidget):
         super().__init__(parent)
         self.parent = parent
         self.setAcceptDrops(True)
-        self.setDragEnabled(True)  # 允许拖动
+        # self.setDragEnabled(True)  # 允许拖动
         self.setColumnCount(1)
         self.setRowCount(1)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
@@ -71,6 +69,14 @@ class Table(QTableWidget):
         get_gender = QAction("取选中列性别", self)
         get_gender.triggered.connect(self.parent.interface.get_gender)
         data_extraction_menu.addAction(get_gender)
+
+        get_phone_number = QAction("取选中列手机号", self)
+        get_phone_number.triggered.connect(lambda: self.parent.interface.get_number('手机号'))
+        data_extraction_menu.addAction(get_phone_number)
+
+        get_identity_number = QAction("取选中列身份证号", self)
+        get_identity_number.triggered.connect(lambda: self.parent.interface.get_number('身份证号'))
+        data_extraction_menu.addAction(get_identity_number)
 
         action2 = QAction("Action 2", self)
         action2.triggered.connect(lambda: self.onContextMenuAction(row, column, "Action 2"))

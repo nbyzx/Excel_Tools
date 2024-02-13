@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QTableWidgetItem, QHBoxLayout, QTableWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QTableWidget
 from Ui.menu import MenuBar
 from Ui.progress import ProgressBar
 from Ui.table import Table

@@ -1,7 +1,7 @@
 import pandas as pd
-from PyQt6.QtCore import pyqtSlot, pyqtSignal, QStandardPaths
-from PyQt6.QtGui import QAction, QColor, QPalette
-from PyQt6.QtWidgets import QMenuBar, QMenu, QFileDialog, QApplication, QTableWidget, QTableWidgetItem, QMessageBox
+from PyQt6.QtCore import QStandardPaths
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QMenuBar, QMenu, QFileDialog, QMessageBox
 
 from Utils.openfile import OpenFile
 
