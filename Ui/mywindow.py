@@ -6,6 +6,7 @@ from Utils.interface import Interface
 
 
 class MyWindow(QMainWindow):
+    # 当前选择的表格
     select_table: QTableWidget = None
 
     def __init__(self, parent=None):
