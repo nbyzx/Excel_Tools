@@ -41,6 +41,7 @@ def contains_pattern(input_text):
     return False
 
 
+# 获取当前选择表格和选中单元格的装饰器，调用函数时会先执行该装饰器
 def get_table(func):
     def wrapper(self, *args, **kwargs):
         # 修改 self.table 的值
@@ -48,6 +49,7 @@ def get_table(func):
         self.selected_items = self.table.selectedItems()
         # 执行原始函数，传递参数 args 和 kwargs
         return func(self, *args, **kwargs)
+
     return wrapper
 
 
