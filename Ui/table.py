@@ -21,6 +21,8 @@ class Table(QTableWidget):
     def mousePressEvent(self, event):
         if self.thread_lock:
             self.parent.select_table = QApplication.focusWidget()
+            sort = self.parent.select_table.isSortingEnabled()
+            self.parent.toolbar.sort_button.setChecked(sort)
             self.parent.interface.set_table_color()
         super().mousePressEvent(event)
 

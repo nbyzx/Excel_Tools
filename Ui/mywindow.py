@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QHB
 from Ui.menu import MenuBar
 from Ui.progress import ProgressBar
 from Ui.table import Table
+from Ui.toolbar import ToolBar
 from Utils.interface import Interface
 
 
@@ -24,6 +25,9 @@ class MyWindow(QMainWindow):
 
         self.setGeometry(window_x, window_y, window_width, window_height)
         self.interface = Interface(self)
+        self.menu_bar = MenuBar(self)
+        self.toolbar = ToolBar(self)
+        self.addToolBar(self.toolbar)
         self.table = Table(self)
         self.select_table = self.table
 
@@ -42,5 +46,4 @@ class MyWindow(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
-        self.menu_bar = MenuBar(self)
         self.setMenuBar(self.menu_bar)
