@@ -1,5 +1,8 @@
 from datetime import datetime
 import re
+
+from PyQt6 import QtCore
+from PyQt6.QtCore import Qt, QVariant, QMetaType
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QTableWidget, QTableWidgetItem, QMessageBox
 
@@ -161,8 +164,7 @@ class Interface:
         red_color = QColor(255, 255, 255)
         if selected_table and isinstance(selected_table, QTableWidget):
             table = selected_table
-            item = QTableWidgetItem()
-            item.setText(value)
+            item = QTableWidgetItem(value)
             if self.parent.menu_bar.data_compare_action.isChecked():
                 table_to_check = self.parent.table_compare if selected_table == self.parent.table else self.parent.table
                 if table_to_check.rowCount() > row and table_to_check.columnCount() > col:

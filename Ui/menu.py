@@ -1,7 +1,7 @@
 import pandas as pd
 from PyQt6.QtCore import QStandardPaths
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMenuBar, QMenu, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QMenuBar, QMenu, QFileDialog, QMessageBox, QTableWidgetItem
 
 from Utils.openfile import OpenFile
 
@@ -27,6 +27,48 @@ class MenuBar(QMenuBar):
         self.data_compare_action.setCheckable(True)
         self.data_compare_action.triggered.connect(self.data_compare)
         self.data_menu.addAction(self.data_compare_action)
+
+        self.data_sum_action = QAction("数据合计", self)
+        self.data_sum_action.triggered.connect(self.data_sum)
+        self.data_menu.addAction(self.data_sum_action)
+
+    def data_sum(self):
+        table = self.parent.select_table
+        rows = table.rowCount()
+        cols = table.columnCount()
+        table.insertColumn(cols)
+        table.insertRow(rows)
+        item = QTableWidgetItem('合计')
+        table.setHorizontalHeaderItem(cols, item)
+        table.setVerticalHeaderItem(rows, item)
+        total_sum = 0.0
+        for row in range(rows):
+            total = 0.0
+            for col in range(cols):
+                number = table.item(row, col)
+                if number is not None and number.text().isdigit():
+                    total = self.is_decimal(table.item(rows, col), float(number.text()))
+                    rows_item = QTableWidgetItem(str(total))
+                    table.setItem(rows, col, rows_item)
+                    total = self.is_decimal(table.item(row, cols), float(number.text()))
+                    cols_item = QTableWidgetItem(str(total))
+                    table.setItem(row, cols, cols_item)
+            total_sum += total
+        item = QTableWidgetItem(str(self.is_decimal_zero(total_sum)))
+        table.setItem(rows, cols, item)
+
+    def is_decimal(self, total, number):
+        number_sum = 0
+        if total is not None:
+            number_sum = float(total.text())
+        number_sum += number
+        return self.is_decimal_zero(number_sum)
+
+    def is_decimal_zero(self, number):
+        if number - int(number) == 0:
+            return int(number)
+        else:
+            return number
 
     def open_file(self):
         file_dialog = QFileDialog()
@@ -64,7 +106,7 @@ class MenuBar(QMenuBar):
                         row_data.append(item.text())
                     else:
                         row_data.append('')
-                self.parent.progress.setValue(row+1)
+                self.parent.progress.setValue(row + 1)
                 data.append(row_data)
 
             # 将二维列表转换为DataFrame
